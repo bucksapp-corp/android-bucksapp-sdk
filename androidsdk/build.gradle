@@ -79,7 +79,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.9.0'
 }
 
-group = 'com.github.bucksapp-corp:android-bucksapp-sdk'
+group = 'com.github.bucksapp-corp.android-bucksapp-sdk'
 version = library_version
 
 if (android.productFlavors.size() > 0) {
