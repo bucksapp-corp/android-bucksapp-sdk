@@ -84,6 +84,7 @@ version = library_version
 
 if (android.productFlavors.size() > 0) {
     android.libraryVariants.all { variant ->
+
         if (variant.name.toLowerCase().contains("debug")) {
             return
         }
@@ -96,6 +97,17 @@ if (android.productFlavors.size() > 0) {
                 builtBy bundleTask
                 name = project.name
             }
+        }
+
+        def flavorName = variant.flavorName.toLowerCase()
+        def flavorSourcesTask = tasks.create(name : "${flavorName}SourcesJar", type: Jar) {
+            classifier = "${flavorName}-sources"
+            from android.sourceSets.main.javaDirectories
+            from android.sourceSets[flavorName].javaDirectories
+        }
+
+        artifacts {
+            archives flavorSourcesTask
         }
 
     }
