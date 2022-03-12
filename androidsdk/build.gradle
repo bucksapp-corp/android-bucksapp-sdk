@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
-    id 'com.github.dcendents.android-maven'
+    id 'maven-publish'
 }
 
 android {
@@ -54,14 +54,14 @@ android {
     }
 }
 
-task sourcesJar(type: Jar) {
-    archiveClassifier.set("sources")
-    from android.sourceSets.main.javaDirectories
-}
-
-artifacts {
-    archives sourcesJar
-}
+//task sourcesJar(type: Jar) {
+//    archiveClassifier.set("sources")
+//    from android.sourceSets.main.javaDirectories
+//}
+//
+//artifacts {
+//    archives sourcesJar
+//}
 
 dependencies {
 
@@ -79,36 +79,66 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.9.0'
 }
 
-group = 'com.github.bucksapp-corp.android-bucksapp-sdk'
-version = library_version
+//group = 'com.github.bucksapp-corp.android-bucksapp-sdk'
+//version = library_version
 
-if (android.productFlavors.size() > 0) {
-    android.libraryVariants.all { variant ->
+afterEvaluate {
+    publishing {
+        publications {
+            productionRelease(MavenPublication) {
+                from components.productionRelease
 
-        if (variant.name.toLowerCase().contains("debug")) {
-            return
-        }
+                groupId = 'com.github.bucksapp-corp'
+                artifactId = 'android-bucksapp-sdk'
+                version = library_version
+                artifact("$buildDir/outputs/aar/android-bucksapp-sdk-production-release.aar") {
+                    classifier 'production'
+                    extension 'aar'
+                }
+            }
 
-        def bundleTask = tasks["bundle${variant.name.capitalize()}Aar"]
+            sandboxDebug(MavenPublication){
+                from components.sandboxDebug
 
-        artifacts {
-            archives(bundleTask.archivePath) {
-                classifier variant.flavorName
-                builtBy bundleTask
-                name = project.name
+                groupId = 'com.github.bucksapp-corp'
+                artifactId = 'android-bucksapp-sdk'
+                version = library_version
+                artifact("$buildDir/outputs/aar/android-bucksapp-sdk-sandbox-release.aar") {
+                    classifier 'sandbox'
+                    extension 'aar'
+                }
             }
         }
-
-        def flavorName = variant.flavorName.toLowerCase()
-        def flavorSourcesTask = tasks.create(name : "${flavorName}SourcesJar", type: Jar) {
-            archiveClassifier.set("${flavorName}-sources")
-            from android.sourceSets.main.javaDirectories
-            from android.sourceSets[flavorName].javaDirectories
-        }
-
-        artifacts {
-            archives flavorSourcesTask
-        }
-
     }
 }
+//
+//if (android.productFlavors.size() > 0) {
+//    android.libraryVariants.all { variant ->
+//
+//        if (variant.name.toLowerCase().contains("debug")) {
+//            return
+//        }
+//
+//        def bundleTask = tasks["bundle${variant.name.capitalize()}Aar"]
+//
+//        artifacts {
+//            archives(bundleTask.archivePath) {
+//                classifier variant.flavorName
+//                builtBy bundleTask
+//                name = project.name
+//            }
+//        }
+//
+//        def flavorName = variant.flavorName.toLowerCase()
+//        def flavorSourcesTask = tasks.create(name : "${flavorName}SourcesJar", type: Jar) {
+//            archiveClassifier.set("${flavorName}-sources")
+//            from android.sourceSets.main.javaDirectories
+//            from android.sourceSets[flavorName].javaDirectories
+//        }
+//
+//        artifacts {
+//            archives flavorSourcesTask
+//        }
+//
+//    }
+//}
