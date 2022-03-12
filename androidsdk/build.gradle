@@ -12,7 +12,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 31
         versionCode 1
-        versionName "1.0.0"
+        versionName "1.0.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -79,30 +79,20 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.9.0'
 }
 
-//group = 'com.github.bucksapp-corp.android-bucksapp-sdk'
-//version = library_version
+group = 'com.github.bucksapp-corp.android-bucksapp-sdk'
+version = library_version
 
 afterEvaluate {
     publishing {
         publications {
-            productionRelease(MavenPublication) {
-                from components.productionRelease
-
-                groupId = 'com.github.bucksapp-corp'
-                artifactId = 'android-bucksapp-sdk'
-                version = library_version
+            production(MavenPublication) {
                 artifact("$buildDir/outputs/aar/android-bucksapp-sdk-production-release.aar") {
                     classifier 'production'
                     extension 'aar'
                 }
             }
 
-            sandboxDebug(MavenPublication){
-                from components.sandboxDebug
-
-                groupId = 'com.github.bucksapp-corp'
-                artifactId = 'android-bucksapp-sdk'
-                version = library_version
+            sandbox(MavenPublication){
                 artifact("$buildDir/outputs/aar/android-bucksapp-sdk-sandbox-release.aar") {
                     classifier 'sandbox'
                     extension 'aar'
