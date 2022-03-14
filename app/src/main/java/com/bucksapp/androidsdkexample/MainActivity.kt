@@ -17,7 +17,6 @@ class MainActivity : AppCompatActivity() {
                 this@MainActivity,
                 "12TvAswlCh03Qhj5uxiM7w",
                 "1c111bf4-7646-4b84-bc4c-4426fb596a87",
-                "es"
             )
         }
 

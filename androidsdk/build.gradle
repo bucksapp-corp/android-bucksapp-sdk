@@ -1,7 +1,6 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
-    id 'maven-publish'
 }
 
 android {
@@ -25,26 +24,6 @@ android {
         }
     }
 
-    defaultPublishConfig "productionRelease"
-
-    flavorDimensions "version"
-
-    productFlavors {
-        production {
-            dimension "version"
-            buildConfigField("String", "API_URL", "\"https://api.dev.bucksapp.com\"")
-            buildConfigField("String", "ENV", "\"production\"")
-        }
-        sandbox {
-            dimension "version"
-            buildConfigField("String", "API_URL", "\"https://api.dev.bucksapp.com\"")
-            buildConfigField("String", "ENV", "\"development\"")
-        }
-    }
-
-    // default build flavour
-    defaultPublishConfig "productionRelease"
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -53,15 +32,6 @@ android {
         jvmTarget = '1.8'
     }
 }
-
-task sourcesJar(type: Jar) {
-    archiveClassifier.set("sources")
-    from android.sourceSets.main.javaDirectories
-}
-//
-//artifacts {
-//    archives sourcesJar
-//}
 
 dependencies {
 
@@ -78,69 +48,3 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:4.9.3"
     implementation 'com.google.code.gson:gson:2.9.0'
 }
-
-group = 'com.github.bucksapp-corp.android-bucksapp-sdk'
-version = library_version
-
-afterEvaluate {
-    publishing {
-        publications {
-            production(MavenPublication) {
-                from components.productionRelease
-
-                groupId = 'com.github.bucksapp-corp'
-                artifactId = 'android-bucksapp-sdk'
-                version = library_version
-                artifact(sourcesJar)
-                artifact("$buildDir/outputs/aar/android-bucksapp-sdk-production-release.aar") {
-                    classifier 'production'
-                    extension 'aar'
-                }
-            }
-
-            sandbox(MavenPublication){
-                from components.sandboxRelease
-
-                groupId = 'com.github.bucksapp-corp'
-                artifactId = 'android-bucksapp-sdk'
-                version = library_version
-                artifact(sourcesJar)
-                artifact("$buildDir/outputs/aar/android-bucksapp-sdk-sandbox-release.aar") {
-                    classifier 'dev'
-                    extension 'aar'
-                }
-            }
-        }
-    }
-}
-//
-//if (android.productFlavors.size() > 0) {
-//    android.libraryVariants.all { variant ->
-//
-//        if (variant.name.toLowerCase().contains("debug")) {
-//            return
-//        }
-//
-//        def bundleTask = tasks["bundle${variant.name.capitalize()}Aar"]
-//
-//        artifacts {
-//            archives(bundleTask.archivePath) {
-//                classifier variant.flavorName
-//                builtBy bundleTask
-//                name = project.name
-//            }
-//        }
-//
-//        def flavorName = variant.flavorName.toLowerCase()
-//        def flavorSourcesTask = tasks.create(name : "${flavorName}SourcesJar", type: Jar) {
-//            archiveClassifier.set("${flavorName}-sources")
-//            from android.sourceSets.main.javaDirectories
-//            from android.sourceSets[flavorName].javaDirectories
-//        }
-//
-//        artifacts {
-//            archives flavorSourcesTask
-//        }
-//
-//    }
-//}
