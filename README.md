@@ -31,11 +31,17 @@ import com.bucksapp.androidsdk.Bucksapp;
 
 Start the activity with init function
 ```
-public static void init(Context context,  String apiKey, String uuid, String language)
+init(context: Context,
+     apiKey: String,
+     uuid: String,
+     env: String, // 'staging' or 'production'
+     language: String // 'es' or 'en'
+     )
 ```
 
 `context`, `apiKey`, `uuid` are required
 
+`env` by default is `staging`
 `language` by default is `es`
 
 Example:
@@ -43,5 +49,6 @@ Example:
 Bucksapp.init(MainActivity.this,
                         "12TvAswlCh03Qhj5uxiM7w",
                         "1c111bf4-7646-4b84-bc4c-4426fb596a87",
+                        "production",
                         "es");
 ```
