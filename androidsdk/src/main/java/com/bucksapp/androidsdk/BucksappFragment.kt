@@ -13,6 +13,7 @@ import com.google.gson.Gson
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import java.io.IOException
+import okhttp3.RequestBody.Companion.toRequestBody
 
 /**
  * A simple [Fragment] subclass.
@@ -32,22 +33,26 @@ class BucksappFragment : Fragment() {
         if (arguments != null) {
             apiKey = requireArguments().getString(BucksappFragment.ARG_API_KEY)
             uuid = requireArguments().getString(BucksappFragment.ARG_UUID)
-            env = requireArguments().getString(BucksappFragment.ARG_LANGUAGE)
-            language = requireArguments().getString(BucksappFragment.ARG_ENV)
+            env = requireArguments().getString(BucksappFragment.ARG_ENV)
+            language = requireArguments().getString(BucksappFragment.ARG_LANGUAGE)
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val root = inflater.inflate(R.layout.fragment_bucksapp, container, false)
         val webView = root.findViewById<WebView>(R.id.webView)
         val webViewClient = WebViewClient()
         webView.webViewClient = webViewClient
-        val signatures = SignatureUtil.getSignatures(context.packageManager,
-            context.applicationInfo.packageName)
+        val signatures = SignatureUtil.getSignatures(
+            requireContext().packageManager,
+            requireContext().applicationInfo.packageName
+        )
         var signature = ""
         if (signatures != null) {
-            if (signatures.isNotEmpty()){
+            if (signatures.isNotEmpty()) {
                 signature = signatures[0]!!
             }
         }
@@ -67,7 +72,7 @@ class BucksappFragment : Fragment() {
             .addHeader("jwt_aud", env!!)
             .addHeader("Content-Type", "application/json")
             .addHeader("X-API-KEY", apiKey!!)
-            .addHeader("package_name", context.applicationInfo.packageName)
+            .addHeader("package_name", requireContext().applicationInfo.packageName)
             .addHeader("build_signature", signature)
             .build()
 
@@ -86,7 +91,7 @@ class BucksappFragment : Fragment() {
                         )
                         val authResponse: Bucksapp.AuthResponse =
                             gson.fromJson<Bucksapp.AuthResponse>(
-                                responseBody.string(),
+                                responseBody!!.string(),
                                 Bucksapp.AuthResponse::class.java
                             )
                         token = authResponse.token
@@ -99,11 +104,12 @@ class BucksappFragment : Fragment() {
                                 host,
                                 String.format("NEXT_LOCALE=%s;", language)
                             )
-                            if (host != null) {
-                                webView.loadUrl(host)
-                                webView.settings.javaScriptEnabled = true
-                                webView.addJavascriptInterface(WebAppInterface(context!!), "BucksappAndroid")
-                            }
+                            webView.loadUrl(host)
+                            webView.settings.javaScriptEnabled = true
+                            webView.addJavascriptInterface(
+                                WebAppInterface(context!!),
+                                "BucksappAndroid"
+                            )
                         }
                     }
                 } catch (e: Exception) {
@@ -130,14 +136,21 @@ class BucksappFragment : Fragment() {
          *
          * @param apiKey   API_KEY provided by Bucksapp.
          * @param uuid     User uuid.
+         * @param env Language ['development', 'staging', 'production'].
          * @param language Language ['es', 'en'].
          * @return A new instance of fragment BucksappFragment.
          */
-        fun newInstance(apiKey: String?, uuid: String?, language: String?): BucksappFragment {
+        fun newInstance(
+            apiKey: String?,
+            uuid: String?,
+            env: String?,
+            language: String?
+        ): BucksappFragment {
             val fragment = BucksappFragment()
             val args = Bundle()
             args.putString(ARG_API_KEY, apiKey)
             args.putString(ARG_UUID, uuid)
+            args.putString(ARG_ENV, env)
             args.putString(ARG_LANGUAGE, language)
             fragment.arguments = args
             return fragment
@@ -149,13 +162,15 @@ class BucksappFragment : Fragment() {
          *
          * @param apiKey   API_KEY provided by Bucksapp.
          * @param uuid     User uuid.
+         * @param env Language ['development', 'staging', 'production'].
          * @return A new instance of fragment BucksappFragment.
          */
-        fun newInstance(apiKey: String?, uuid: String?): BucksappFragment {
+        fun newInstance(apiKey: String?, uuid: String?, env: String?): BucksappFragment {
             val fragment = BucksappFragment()
             val args = Bundle()
             args.putString(ARG_API_KEY, apiKey)
             args.putString(ARG_UUID, uuid)
+            args.putString(ARG_ENV, env)
             args.putString(ARG_LANGUAGE, defaultLanguage)
             fragment.arguments = args
             return fragment

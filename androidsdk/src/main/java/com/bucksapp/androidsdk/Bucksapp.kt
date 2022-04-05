@@ -1,11 +1,11 @@
 package com.bucksapp.androidsdk
 
 import android.content.Context
-import android.content.Intent
 import com.google.gson.Gson
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import java.io.IOException
+import okhttp3.RequestBody.Companion.toRequestBody
 
 
 object Bucksapp {

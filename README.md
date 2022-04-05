@@ -24,31 +24,27 @@ dependencies {
 }
 ```
 
-Now, you can import Bucksapp util class
+Now, you can import BucksappFragment class
 ```
-import com.bucksapp.androidsdk.Bucksapp;
-```
-
-Start the activity with init function
-```
-init(context: Context,
-     apiKey: String,
-     uuid: String,
-     env: String, // 'staging' or 'production'
-     language: String // 'es' or 'en'
-     )
+import com.bucksapp.androidsdk.BucksappFragment
 ```
 
-`context`, `apiKey`, `uuid` are required
-
-`env` by default is `staging`
-`language` by default is `es`
-
-Example:
+Launch the fragment, for example:
 ```
-Bucksapp.init(MainActivity.this,
-                        "<API_KEY>",
-                        "<UUID>",
-                        "production",
-                        "es");
+supportFragmentManager.beginTransaction()
+                .replace(
+                    R.id.fragment_container, BucksappFragment.newInstance(
+                        "API_KEY",
+                        "USER_UUID",
+                        "development",
+                        "es"
+                    )
+                )
+                .commitNow()
 ```
+
+`API_KEY`, `USER_UUID` are required
+
+`env` by default is `development`. values `['development', 'staging', 'production']`
+`language` by default is `es`. Values `['es', 'en']`
+
