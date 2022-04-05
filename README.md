@@ -1,7 +1,7 @@
 # Android Bucksapp SDK
 This sample app will show how Android Bucksapp SDK can integrate with your own android app.
 
-<img src="https://user-images.githubusercontent.com/74667619/157908611-a4445ea5-c133-4482-bf37-78f8010b1641.gif" width="350px" />
+<img src="https://user-images.githubusercontent.com/74667619/161836464-52b5e585-4588-4756-8e8b-3fcdc4af2b35.gif" width="350px" />
 
 # Getting started
 
