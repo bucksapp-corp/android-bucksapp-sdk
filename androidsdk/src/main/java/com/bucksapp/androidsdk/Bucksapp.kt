@@ -5,7 +5,6 @@ import android.content.Intent
 import com.google.gson.Gson
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
 
 
@@ -16,14 +15,14 @@ object Bucksapp {
     private const val productionEnv = "production"
     private const val defaultEnv = stagingEnv
 
-    fun getHost(env: String = defaultEnv): String {
+    fun getHost(env: String? = defaultEnv): String {
         if (env == productionEnv) {
             return "https://app.dev.bucksapp.com"
         }
         return "https://app.dev.bucksapp.com"
     }
 
-    fun getApiAuthHost(env: String = defaultEnv): String {
+    fun getApiAuthHost(env: String? = defaultEnv): String {
         if (env == productionEnv) {
             return "https://api.dev.bucksapp.com"
         }
@@ -79,11 +78,7 @@ object Bucksapp {
                         )
                         val authResponse =
                             gson.fromJson(responseBody!!.string(), AuthResponse::class.java)
-                        val i = Intent(context, BucksappActivity::class.java)
-                        i.putExtra("TOKEN", authResponse.token)
-                        i.putExtra("LANG", language)
-                        i.putExtra("HOST", host)
-                        context.startActivity(i)
+
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
