@@ -16,8 +16,8 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction()
                 .replace(
                     R.id.fragment_container, BucksappFragment.newInstance(
-                        "12TvAswlCh03Qhj5uxiM7w",
-                        "1c111bf4-7646-4b84-bc4c-4426fb596a87",
+                        "API_KEY",
+                        "USER_UUID",
                         "development",
                         "es"
                     )
