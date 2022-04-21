@@ -20,7 +20,7 @@ Add the dependency in your app build.gradle
 ```
 dependencies {
   ...
-  implementation 'com.github.bucksapp-corp:android-bucksapp-sdk:1.0'
+  implementation 'com.github.bucksapp-corp:android-bucksapp-sdk:1.0.1'
 }
 ```
 
