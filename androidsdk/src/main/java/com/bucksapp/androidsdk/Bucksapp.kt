@@ -11,20 +11,27 @@ import okhttp3.RequestBody.Companion.toRequestBody
 object Bucksapp {
     private val client = OkHttpClient()
     private const val defaultLanguage = "es"
-    private const val stagingEnv = "development"
+    private const val developmentEnv = "development"
+    private const val stagingEnv = "staging"
     private const val productionEnv = "production"
     private const val defaultEnv = stagingEnv
 
     fun getHost(env: String? = defaultEnv): String {
         if (env == productionEnv) {
-            return "https://app.dev.bucksapp.com"
+            return "https://app.prd.bucksapp.com"
+        }
+        if (env == stagingEnv) {
+            return "https://app.stg.bucksapp.com"
         }
         return "https://app.dev.bucksapp.com"
     }
 
     fun getApiAuthHost(env: String? = defaultEnv): String {
         if (env == productionEnv) {
-            return "https://api.dev.bucksapp.com"
+            return "https://api.prd.bucksapp.com"
+        }
+        if (env == stagingEnv) {
+            return "https://api.stg.bucksapp.com"
         }
         return "https://api.dev.bucksapp.com"
     }
