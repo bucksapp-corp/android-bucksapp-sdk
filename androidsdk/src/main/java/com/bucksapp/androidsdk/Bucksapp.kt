@@ -14,26 +14,17 @@ object Bucksapp {
     private const val developmentEnv = "development"
     private const val stagingEnv = "staging"
     private const val productionEnv = "production"
+    private const val sandboxEnv = "sandbox"
     private const val defaultEnv = stagingEnv
 
     fun getHost(env: String? = defaultEnv): String {
-        if (env == productionEnv) {
-            return "https://app.prd.bucksapp.com"
-        }
-        if (env == stagingEnv) {
-            return "https://app.stg.bucksapp.com"
+
+        when (env) {
+            productionEnv -> return "https://app.bucksapp.com"
+            stagingEnv -> return "https://app.stg.bucksapp.com"
+            sandboxEnv -> return "https://app.sbx.bucksapp.com"
         }
         return "https://app.dev.bucksapp.com"
-    }
-
-    fun getApiAuthHost(env: String? = defaultEnv): String {
-        if (env == productionEnv) {
-            return "https://api.prd.bucksapp.com"
-        }
-        if (env == stagingEnv) {
-            return "https://api.stg.bucksapp.com"
-        }
-        return "https://api.dev.bucksapp.com"
     }
 
     fun init(
@@ -60,9 +51,8 @@ object Bucksapp {
         )
         val body: RequestBody = jsonString.toRequestBody(mediaType);
         val host: String = getHost(env)
-        val authHost: String = getApiAuthHost(env)
         val request: Request = Request.Builder()
-            .url("$authHost/api/fi/v1/authenticate")
+            .url("$host/api/authenticate")
             .method("POST", body)
             .addHeader("jwt_aud", env)
             .addHeader("Content-Type", "application/json")

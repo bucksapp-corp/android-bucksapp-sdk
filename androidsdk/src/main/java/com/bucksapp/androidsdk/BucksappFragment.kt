@@ -65,9 +65,8 @@ class BucksappFragment : Fragment() {
         )
         val body: RequestBody = jsonString.toRequestBody(mediaType);
         val host: String = Bucksapp.getHost(env)
-        val authHost: String = Bucksapp.getApiAuthHost(env)
         val request: Request = Request.Builder()
-            .url("$authHost/api/fi/v1/authenticate")
+            .url("$host/api/authenticate")
             .method("POST", body)
             .addHeader("jwt_aud", env!!)
             .addHeader("Content-Type", "application/json")
@@ -86,7 +85,7 @@ class BucksappFragment : Fragment() {
                 try {
                     response.body.use { responseBody ->
                         if (!response.isSuccessful) throw IOException(
-                            """Unexpected code ${response.body!!.string()}
+                            """Unexpected code  ${response.body!!.string()}
  Headers: ${request.headers}"""
                         )
                         val authResponse: Bucksapp.AuthResponse =
@@ -136,7 +135,7 @@ class BucksappFragment : Fragment() {
          *
          * @param apiKey   API_KEY provided by Bucksapp.
          * @param uuid     User uuid.
-         * @param env Language ['development', 'staging', 'production'].
+         * @param env Language ['development', 'staging', 'sandbox',  'production'].
          * @param language Language ['es', 'en'].
          * @return A new instance of fragment BucksappFragment.
          */
