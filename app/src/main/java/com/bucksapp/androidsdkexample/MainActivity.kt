@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
                     R.id.fragment_container, BucksappFragment.newInstance(
                         "API_KEY",
                         "USER_UUID",
-                        "development",
+                        "staging",
                         "es"
                     )
                 )
