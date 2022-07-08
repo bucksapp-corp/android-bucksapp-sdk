@@ -45,6 +45,7 @@ supportFragmentManager.beginTransaction()
 
 `API_KEY`, `USER_UUID` are required
 
-`env` by default is `development`. values `['development', 'staging', 'production']`
+`env` by default is `development`. values `['development', 'staging', 'sandbox', 'production']`
+
 `language` by default is `es`. Values `['es', 'en']`
 
