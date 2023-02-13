@@ -11,9 +11,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.google.gson.Gson
 import okhttp3.*
-import okhttp3.MediaType.Companion.toMediaType
 import java.io.IOException
-import okhttp3.RequestBody.Companion.toRequestBody
 
 /**
  * A simple [Fragment] subclass.
@@ -57,13 +55,13 @@ class BucksappFragment : Fragment() {
             }
         }
 
-        val mediaType = "application/json; charset=utf-8".toMediaType()
+        val mediaType = MediaType.parse("application/json; charset=utf-8")
         val gson = Gson()
         val jsonString = String.format(
             "{\"user\": \"%s\"}",
             uuid,
         )
-        val body: RequestBody = jsonString.toRequestBody(mediaType);
+        val body: RequestBody = RequestBody.create(mediaType, jsonString)
         val host: String = Bucksapp.getHost(env)
         val request: Request = Request.Builder()
             .url("$host/api/authenticate")
@@ -83,10 +81,11 @@ class BucksappFragment : Fragment() {
             @kotlin.Throws(IOException::class)
             override fun onResponse(call: Call, response: Response) {
                 try {
-                    response.body.use { responseBody ->
+                    response.body().use { responseBody ->
                         if (!response.isSuccessful) throw IOException(
-                            """Unexpected code  ${response.body!!.string()}
- Headers: ${request.headers}"""
+                            """Unexpected code  ${
+                                response.body()!!.string()
+                            } Headers: ${request.headers()}"""
                         )
                         val authResponse: Bucksapp.AuthResponse =
                             gson.fromJson<Bucksapp.AuthResponse>(

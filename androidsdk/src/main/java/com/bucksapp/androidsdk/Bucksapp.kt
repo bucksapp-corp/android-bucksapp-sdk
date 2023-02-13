@@ -3,10 +3,7 @@ package com.bucksapp.androidsdk
 import android.content.Context
 import com.google.gson.Gson
 import okhttp3.*
-import okhttp3.MediaType.Companion.toMediaType
 import java.io.IOException
-import okhttp3.RequestBody.Companion.toRequestBody
-
 
 object Bucksapp {
     private val client = OkHttpClient()
@@ -18,7 +15,6 @@ object Bucksapp {
     private const val defaultEnv = stagingEnv
 
     fun getHost(env: String? = defaultEnv): String {
-
         when (env) {
             productionEnv -> return "https://app.bucksapp.com"
             stagingEnv -> return "https://app.stg.bucksapp.com"
@@ -43,13 +39,13 @@ object Bucksapp {
             }
         }
 
-        val mediaType = "application/json; charset=utf-8".toMediaType()
+        val mediaType = MediaType.parse("application/json; charset=utf-8")
         val gson = Gson()
         val jsonString = String.format(
             "{\"user\": \"%s\"}",
             uuid,
         )
-        val body: RequestBody = jsonString.toRequestBody(mediaType);
+        val body: RequestBody = RequestBody.create(mediaType, jsonString)
         val host: String = getHost(env)
         val request: Request = Request.Builder()
             .url("$host/api/authenticate")
@@ -68,10 +64,11 @@ object Bucksapp {
             @Throws(IOException::class)
             override fun onResponse(call: Call, response: Response) {
                 try {
-                    response.body.use { responseBody ->
+
+                    response.body().use { responseBody ->
                         if (!response.isSuccessful) throw IOException(
-                            """Unexpected code ${response.body!!.string()} 
-                                |Headers: ${request.headers}""".trimMargin()
+                            """Unexpected code ${response.body()!!.string()} 
+                                |Headers: ${request.headers()}""".trimMargin()
                         )
                         val authResponse =
                             gson.fromJson(responseBody!!.string(), AuthResponse::class.java)
