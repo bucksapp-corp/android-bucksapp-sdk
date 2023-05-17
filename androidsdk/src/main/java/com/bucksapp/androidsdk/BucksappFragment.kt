@@ -110,7 +110,7 @@ class BucksappFragment : Fragment() {
                                 CookieManager.getInstance()
                                     .setAcceptThirdPartyCookies(webView, true)
                             }
-                            webView.loadUrl(host)
+                            webView.loadUrl("$host/$language?token=$token")
                             webView.settings.javaScriptEnabled = true
                             webView.addJavascriptInterface(
                                 WebAppInterface(context!!),
