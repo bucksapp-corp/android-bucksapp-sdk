@@ -1,6 +1,7 @@
 package com.bucksapp.androidsdk
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -97,11 +98,18 @@ class BucksappFragment : Fragment() {
                             val cookieManager = CookieManager.getInstance()
                             cookieManager.setAcceptCookie(true)
                             cookieManager.removeAllCookie()
-                            cookieManager.setCookie(host, String.format("token=%s;", token))
+                            cookieManager.setCookie(
+                                host,
+                                String.format("token=%s;", token)
+                            )
                             cookieManager.setCookie(
                                 host,
                                 String.format("NEXT_LOCALE=%s;", language)
                             )
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                CookieManager.getInstance()
+                                    .setAcceptThirdPartyCookies(webView, true)
+                            }
                             webView.loadUrl(host)
                             webView.settings.javaScriptEnabled = true
                             webView.addJavascriptInterface(
