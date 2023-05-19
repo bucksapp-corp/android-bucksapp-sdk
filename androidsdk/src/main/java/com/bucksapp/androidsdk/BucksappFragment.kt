@@ -1,8 +1,7 @@
 package com.bucksapp.androidsdk
 
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +11,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.google.gson.Gson
 import okhttp3.*
+import org.json.JSONObject
 import java.io.IOException
 
 /**
@@ -81,45 +81,34 @@ class BucksappFragment : Fragment() {
 
             @kotlin.Throws(IOException::class)
             override fun onResponse(call: Call, response: Response) {
-                try {
-                    response.body().use { responseBody ->
-                        if (!response.isSuccessful) throw IOException(
-                            """Unexpected code  ${
-                                response.body()!!.string()
-                            } Headers: ${request.headers()}"""
-                        )
-                        val authResponse: Bucksapp.AuthResponse =
-                            gson.fromJson<Bucksapp.AuthResponse>(
-                                responseBody!!.string(),
-                                Bucksapp.AuthResponse::class.java
-                            )
-                        token = authResponse.token
-                        webView.post {
-                            val cookieManager = CookieManager.getInstance()
-                            cookieManager.setAcceptCookie(true)
-                            cookieManager.removeAllCookie()
-                            cookieManager.setCookie(
-                                host,
-                                String.format("token=%s;", token)
-                            )
-                            cookieManager.setCookie(
-                                host,
-                                String.format("NEXT_LOCALE=%s;", language)
-                            )
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                CookieManager.getInstance()
-                                    .setAcceptThirdPartyCookies(webView, true)
-                            }
-                            webView.loadUrl("$host/$language?token=$token")
-                            webView.settings.javaScriptEnabled = true
-                            webView.addJavascriptInterface(
-                                WebAppInterface(context!!),
-                                "BucksappAndroid"
-                            )
-                        }
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
+                if (!response.isSuccessful) throw IOException(
+                    """Unexpected code  ${
+                        response.body()!!.string()
+                    } Headers: ${request.headers()}"""
+                )
+                val json = response.body()?.string()?.trim()?.let { JSONObject(it) }
+                val token = json?.getString("token")
+                Log.d("BUCKSAPP", "TOKEN: $token")
+                webView.post {
+                    val cookieManager = CookieManager.getInstance()
+                    cookieManager.setAcceptCookie(true)
+                    cookieManager.removeAllCookies(null)
+                    cookieManager.setCookie(
+                        host,
+                        String.format("token=%s;", token)
+                    )
+                    cookieManager.setCookie(
+                        host,
+                        String.format("NEXT_LOCALE=%s;", language)
+                    )
+                    CookieManager.getInstance()
+                        .setAcceptThirdPartyCookies(webView, true)
+                    webView.loadUrl("$host/$language?token=$token")
+                    webView.settings.javaScriptEnabled = true
+                    webView.addJavascriptInterface(
+                        WebAppInterface(context!!),
+                        "BucksappAndroid"
+                    )
                 }
             }
         })
