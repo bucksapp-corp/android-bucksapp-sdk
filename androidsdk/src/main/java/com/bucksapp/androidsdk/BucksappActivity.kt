@@ -1,11 +1,10 @@
 package com.bucksapp.androidsdk
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
-import android.webkit.CookieManager
-import android.webkit.JavascriptInterface
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.util.Log
+import android.webkit.*
 import androidx.appcompat.app.AppCompatActivity
 
 /** Instantiate the interface and set the context  */
@@ -39,6 +38,7 @@ class BucksappActivity : AppCompatActivity() {
             host = savedInstanceState.getSerializable("HOST") as String?
         }
         val webView = findViewById<WebView>(R.id.webView)
+
         val webViewClient = WebViewClient()
         webView.webViewClient = webViewClient
         val cookieManager = CookieManager.getInstance()
@@ -50,9 +50,31 @@ class BucksappActivity : AppCompatActivity() {
             String.format("NEXT_LOCALE=%s;", lang)
         )
         if (host != null) {
+            webView.webChromeClient = object : WebChromeClient() {
+                override fun onJsAlert(
+                    view: WebView?,
+                    url: String?,
+                    message: String?,
+                    result: JsResult?
+                ): Boolean {
+                    Log.d("ALERT","ESTO ES UNA ALERTA")
+                    return super.onJsAlert(view, url, message, result)
+                }
+
+                override fun onJsConfirm(
+                    view: WebView?,
+                    url: String?,
+                    message: String?,
+                    result: JsResult?
+                ): Boolean {
+                    Log.d("CONFIRM","ESTO ES UNA CONFIRMACION")
+                    return super.onJsConfirm(view, url, message, result)
+                }
+            }
             webView.loadUrl(host)
             webView.settings.javaScriptEnabled = true
             webView.addJavascriptInterface(WebAppInterface(this), "BucksappAndroid")
+
         }
 
     }

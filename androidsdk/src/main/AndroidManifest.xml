@@ -3,8 +3,8 @@
     package="com.bucksapp.androidsdk">
     <uses-permission android:name="android.permission.INTERNET"/>
     <application>
-        <activity android:name=".BucksappActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" ></activity>
+        <activity
+            android:name=".BucksappActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
     </application>
-
 </manifest>

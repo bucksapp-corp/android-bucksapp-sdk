@@ -1,14 +1,13 @@
 package com.bucksapp.androidsdk
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.CookieManager
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import com.google.gson.Gson
 import okhttp3.*
 import org.json.JSONObject
@@ -103,6 +102,26 @@ class BucksappFragment : Fragment() {
                     )
                     CookieManager.getInstance()
                         .setAcceptThirdPartyCookies(webView, true)
+                    webView.webChromeClient = object : WebChromeClient() {
+                        override fun onJsConfirm(
+                            view: WebView?,
+                            url: String?,
+                            message: String?,
+                            result: JsResult?
+                        ): Boolean {
+                            val builder = AlertDialog.Builder(view?.context)
+                                .setTitle("")
+                                .setMessage(message)
+                                .setPositiveButton("Aceptar") { dialog, which ->
+                                    result?.confirm()
+                                }
+                                .setNegativeButton("Cancelar") { dialog, which ->
+                                    result?.cancel()
+                                }
+                            builder.create().show()
+                            return true
+                        }
+                }
                     webView.loadUrl("$host/$language?token=$token")
                     webView.settings.javaScriptEnabled = true
                     webView.addJavascriptInterface(
