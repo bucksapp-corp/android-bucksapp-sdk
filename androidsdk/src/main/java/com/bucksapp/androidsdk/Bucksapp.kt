@@ -16,7 +16,7 @@ object Bucksapp {
 
     fun getHost(env: String? = defaultEnv): String {
         when (env) {
-            productionEnv -> return "https://app.bucksapp.com"
+            productionEnv -> return "https://app.wally.bucksapp.com"
             stagingEnv -> return "https://app.stg.bucksapp.com"
             sandboxEnv -> return "https://app.sbx.bucksapp.com"
         }

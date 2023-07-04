@@ -2,7 +2,7 @@
 buildscript {
     ext {
         kotlin_version = "1.6.0"
-        library_version="1.0.10-wally"
+        library_version="1.0.11-wally"
     }
     repositories {
         google()
